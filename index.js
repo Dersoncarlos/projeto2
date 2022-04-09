@@ -1,12 +1,13 @@
 import express from "express";
 import fileUpload from "express-fileupload";
+import cors from "cors";
 
 import { mainRouter } from "./src/routes";
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
-app.use(fileUpload());
+app.use(express.json(), cors(), fileUpload({ useTempFiles: true }));
 
 app.get("/", (_, res) => {
   res.send("Hello World!");
