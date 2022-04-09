@@ -13,15 +13,16 @@ import 'bootstrap/dist/css/bootstrap.css';
 // import logo from './logo.svg';
 import './App.css';
 
-import { uploadCsv } from './services/functions'
+import { uploadCsv, testApi, testando, uploadFile } from './services/functions'
 
-const App = ({ props, uploadCsv }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const App = ({ props, uploadCsv, testApi }) => {
 
-  const toggleIsOpen = () => setIsOpen(!isOpen);
+  const [csv, setCsv] = useState({ csv: '' });
+  const dadosCsv = {};
 
+  console.log(csv)
   const funcUploadCsv = () => {
-    alert('aqui');
+    uploadFile(csv)
   }
 
   return (
@@ -29,7 +30,7 @@ const App = ({ props, uploadCsv }) => {
 
       <Row>
         <Col md="8">
-          <Input name="csv" type='file'></Input>
+          <Input name="csv" type='file' onChange={e => setCsv({ ...csv, csv: e.target.value })}></Input>
         </Col>
         <Col md="4">
           <Button onClick={funcUploadCsv}> Upload </Button>
