@@ -13,12 +13,14 @@ export function uploadFile(file) {
 
 const apiUploadCsv = async payload => {
     console.log('payload', payload);
-    const request = await api.post('api/csv/upload', { params: payload }, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    return request.data
+
+    const dataForm = new FormData();
+    dataForm.append('csv', `${payload.csv}`);
+
+    const request = await api.post('api/csv/upload', dataForm)
+
+
+    return request
 }
 
 export function testando(file) {
