@@ -30,7 +30,7 @@ const App = ({ props, uploadCsv, testApi }) => {
 
       <Row>
         <Col md="8">
-          <Input name="csv" type='file' onChange={e => setCsv({ ...csv, csv: e.target.value })}></Input>
+          <Input name="csv" type='file' onChange={e => setCsv({ ...csv, csv: e.target.files[0] })}></Input>
         </Col>
         <Col md="4">
           <Button onClick={funcUploadCsv}> Upload </Button>
