@@ -1,8 +1,8 @@
 import api from "./api";
 
-
 export const uploadCsv = async (payload) => {
 
+    console.log(`payload`, payload)
     const file = payload.csv;
     const dataForm = new FormData();
     dataForm.append("csv", file);

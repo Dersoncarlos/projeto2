@@ -13,11 +13,13 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
+import { getAge } from './utils';
+
 import { uploadCsv } from './services/functions'
 
 const App = () => {
 
-  const [csv, setCsv] = useState({ csv: '' });
+  const [csv, setCsv] = useState({ csv: '', big: false });
   const [dadosCsv, setDadosCsv] = useState({ rows: [], link: null });
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +42,7 @@ const App = () => {
 
       <Row>
         <Col md="8">
-          <Input type='checkbox' defaultChecked={checked} onChange={() => setChecked(!checked)} /> + 18
+          <Input type='checkbox' defaultChecked={checked} onChange={() => { setChecked(!checked); setCsv({ ...csv, big: !checked }) }} /> + 18
           <Input name="csv" type='file' onChange={e => setCsv({ ...csv, csv: e.target.files[0] })} />
         </Col>
         <Col md="4">
@@ -69,12 +71,22 @@ const App = () => {
               <tbody>
                 {
                   dadosCsv.rows.map((row) => {
-                    return (<tr>
-                      <td>{`${row?.name} ${row?.name}`}</td>
-                      <td>{row?.mail}</td>
-                      <td>{row?.sexo}</td>
-                      <td>{row?.birthdate}</td>
-                    </tr>)
+                    if (checked) {
+                      if (getAge(row?.birthdate) >= 18)
+                        return (<tr>
+                          <td>{`${row?.name} ${row?.name}`}</td>
+                          <td>{row?.mail}</td>
+                          <td>{row?.sexo}</td>
+                          <td>{row?.birthdate}</td>
+                        </tr>)
+                    } else {
+                      return (<tr>
+                        <td>{`${row?.name} ${row?.name}`}</td>
+                        <td>{row?.mail}</td>
+                        <td>{row?.sexo}</td>
+                        <td>{row?.birthdate}</td>
+                      </tr>)
+                    }
                   })
                 }
               </tbody>
