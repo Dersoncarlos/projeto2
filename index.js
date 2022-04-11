@@ -10,7 +10,7 @@ const port = 3001;
 app.use(express.json(), cors(), fileUpload({ useTempFiles: true }));
 
 app.get("/", (_, res) => {
-  res.send("Hello World!");
+  res.send("API CSV");
 });
 
 app.use("/api", mainRouter);
