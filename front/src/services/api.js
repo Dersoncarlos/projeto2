@@ -4,13 +4,20 @@ import { toast } from 'react-toastify';
 toast.configure();
 
 const api = axios.create({
-    baseURL: 'http://4902-131-196-127-44.ngrok.io/'
+    baseURL: 'http://d71c-131-196-127-44.ngrok.io/'
 });
 
 api.interceptors.response.use(async response => {
     return response
 }, async error => {
     switch (error.response.status) {
+        case 400:
+            if (!!error.response.data.message) {
+                toast.error(error.response.data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+            break;
         case 401:
             if (!!error.response.data.message) {
                 toast.error(error.response.data.message, {
@@ -44,10 +51,9 @@ api.interceptors.response.use(async response => {
             }
             break;
         default:
-            // toast.error("Ocorreu um erro, Tente mais tarde", {
-            //     position: toast.POSITION.TOP_RIGHT,
-
-            // });
+            toast.error("Ocorreu um erro, Tente mais tarde", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
             break;
     }
 
