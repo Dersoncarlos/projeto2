@@ -37,11 +37,11 @@ const uploadCsv = (req, res) => {
       .on("data", (row) => csvRows.push(row))
       .on("end", () => {
 
-        const ws = fs.createWriteStream("./src/storage/formated-csv.csv");
+        const ws = fs.createWriteStream(`.${path}`);
 
         fastcsv.write(csvRows, { headers: true }).pipe(ws);
 
-        res.send({ rows: csvRows, link: path });
+        res.send({ rows: csvRows, link: `${req.protocol}://${req.get("host")}/api/csv/download` });
       });
   } catch (error) {
     console.log(error);
@@ -59,7 +59,7 @@ const uploadCsv = (req, res) => {
  * @param {import("express").Response} res
  */
 const downloadCsv = (_, res) => {
-  res.download(path);
+  res.download(`.${path}`);
 };
 
 export default {

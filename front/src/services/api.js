@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 toast.configure();
 
 const api = axios.create({
-    baseURL: 'http://d71c-131-196-127-44.ngrok.io/'
+    baseURL: 'http://167.99.12.227:3002/'
 });
 
 api.interceptors.response.use(async response => {

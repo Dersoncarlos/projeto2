@@ -15,7 +15,7 @@ import './App.css';
 
 import { getAge } from './utils';
 
-import { uploadCsv } from './services/functions'
+import { uploadCsv } from './services/csv.service.js'
 
 const App = () => {
 
