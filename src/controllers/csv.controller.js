@@ -1,43 +1,50 @@
 import fs from "fs";
-import fastCsv from "fast-csv";
+import fastcsv from "fast-csv";
 import { parse, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+
+const path =  "/src/storage/formated-csv.csv";
+
 /**
- *
+ * Upload CSV
  * @param {import("express").Request} req
  * @param {import("express").Response} res
  */
 const uploadCsv = (req, res) => {
   try {
-
     const csvRows = [];
     fs.createReadStream(req.files.csv.tempFilePath)
       .pipe(
-        fastCsv.parse({
+        fastcsv.parse({
           headers: true,
           ignoreEmpty: true,
         })
       )
       .transform((row, next) => {
-        const { ip, id, ...rest } = row;
+        const { ip, id, data_aniversario, nome, email, ...rest } = row;
 
-        const date = parse(row.data_aniversario, "dd/MM/yyyy", new Date(), {
+        const date = parse(data_aniversario, "dd/MM/yyyy", new Date(), {
           locale: ptBR,
         });
 
         return next(null, {
-          name: row.nome,
-          mail: row.email,
+          name: nome,
+          mail: email,
           birthdate: format(date, "yyyy-MM-dd"),
           ...rest,
         });
       })
       .on("data", (row) => csvRows.push(row))
       .on("end", () => {
-        res.send(csvRows);
+
+        const ws = fs.createWriteStream("./src/storage/formated-csv.csv");
+
+        fastcsv.write(csvRows, { headers: true }).pipe(ws);
+
+        res.send({ rows: csvRows, link: path });
       });
   } catch (error) {
-      console.log(error)
+    console.log(error);
     res
       .status(400)
       .send(
@@ -46,6 +53,16 @@ const uploadCsv = (req, res) => {
   }
 };
 
+/**
+ * Download CSV
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
+const downloadCsv = (_, res) => {
+  res.download(path);
+};
+
 export default {
   uploadCsv,
+  downloadCsv,
 };

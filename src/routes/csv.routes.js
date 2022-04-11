@@ -6,5 +6,6 @@ import csvUploadMiddleware from "../middlewares/csvUpload.middleware";
 const csvRouter = express.Router();
 
 csvRouter.post("/upload", csvUploadMiddleware, csvController.uploadCsv);
+csvRouter.get("/download", csvController.downloadCsv);
 
 export { csvRouter };
