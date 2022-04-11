@@ -2,7 +2,9 @@ import fs from "fs";
 import fastcsv from "fast-csv";
 import { parse, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import path from "path";
+
+const path =  "/src/storage/formated-csv.csv";
+
 /**
  * Upload CSV
  * @param {import("express").Request} req
@@ -34,11 +36,12 @@ const uploadCsv = (req, res) => {
       })
       .on("data", (row) => csvRows.push(row))
       .on("end", () => {
+
         const ws = fs.createWriteStream("./src/storage/formated-csv.csv");
 
         fastcsv.write(csvRows, { headers: true }).pipe(ws);
 
-        res.send({ rows: csvRows, link: null });
+        res.send({ rows: csvRows, link: path });
       });
   } catch (error) {
     console.log(error);
@@ -56,7 +59,7 @@ const uploadCsv = (req, res) => {
  * @param {import("express").Response} res
  */
 const downloadCsv = (_, res) => {
-  res.download("./src/storage/formated-csv.csv");
+  res.download(path);
 };
 
 export default {
