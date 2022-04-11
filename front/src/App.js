@@ -1,29 +1,43 @@
 import React, { Fragment, useState } from 'react';
 import {
-  Collapse,
   Container,
   Row,
   Col,
   Button,
   Table,
-  Input
+  Input,
+  Spinner
 } from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.css';
 // import logo from './logo.svg';
 import './App.css';
+import { toast } from 'react-toastify';
 
-import { uploadCsv, testApi, testando, uploadFile } from './services/functions'
 
-const App = ({ props, uploadCsv, testApi }) => {
+import { uploadCsv } from './services/functions'
+
+const App = ({ props }) => {
 
   const [csv, setCsv] = useState({ csv: '' });
-  const dadosCsv = {};
+  const [dadosCsv, setDadosCsv] = useState({ rows: [], link: null });
 
-  console.log(csv)
-  const funcUploadCsv = () => {
-    uploadFile(csv)
+  const [loading, setLoading] = useState(false);
+
+  const funcUploadCsv = async () => {
+    try {
+      setLoading(true);
+      const data = await uploadCsv(csv)
+      setDadosCsv({ rows: data.rows, link: null })
+      setLoading(false);
+
+    } catch (error) {
+      toast.error('erro');
+      setLoading(false);
+    }
+
   }
+
 
   return (
     <Container>
@@ -37,25 +51,33 @@ const App = ({ props, uploadCsv, testApi }) => {
         </Col>
       </Row>
 
+      {loading ?
+        <Spinner />
+        :
+        <Table>
+          <thead>
+            <tr>
+              <td>name</td>
+              <td>email</td>
+              <td>sexo</td>
+              <td>data_aniversario</td>
+            </tr>
+          </thead>
 
-      <Table>
-        <thead>
-          <tr>
-            <td>id</td>
-            <td>name</td>
-            <td>email</td>
-            <td>sexo</td>
-            <td>ip</td>
-            <td>data_aniversario</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </Table>
+
+          <tbody>
+            {dadosCsv.rows.map((row) => {
+              return (<tr>
+                <td>{`${row?.name} ${row?.name}`}</td>
+                <td>{row?.mail}</td>
+                <td>{row?.sexo}</td>
+                <td>{row?.birthdate}</td>
+              </tr>)
+            })}
+          </tbody>
+        </Table>
+
+      }
 
 
     </Container >
